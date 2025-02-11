@@ -5,7 +5,8 @@
             "Summary": "x86_64"
         },
         "Memory": "3.7Gi",
-        "Disk": "1387.5"
+        "Disk": "1387.5",
+        "IP Address": "172.20.240.245"
     },
     "Software": [
         "adduser",

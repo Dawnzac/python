@@ -9,22 +9,26 @@ def get_hardware_info():
     
     if system == "Linux":
         cpu_info = subprocess.getoutput("lscpu | grep 'Model name' | awk -F: '{print $2}'").strip()
-        cpu_summary = subprocess.getoutput("lscpu | grep 'Architecture' | awk -F: '{print $2}'").strip()
+        cpu_arch = subprocess.getoutput("lscpu | grep 'Architecture' | awk -F: '{print $2}'").strip()
         memory_info = subprocess.getoutput("free -h | awk '/^Mem:/ {print $2}'").strip()
         disk_info = subprocess.getoutput("lsblk -o SIZE -n -d | awk '{sum += $1} END {print sum}'").strip()
+        ip_address = subprocess.getoutput("hostname -I | awk '{print $1}'").strip()
         
-        hardware_info["CPU"] = {"Name": cpu_info, "Summary": cpu_summary}
+        hardware_info["CPU"] = {"Name": cpu_info, "Architecture": cpu_arch}
         hardware_info["Memory"] = memory_info
         hardware_info["Disk"] = disk_info
+        hardware_info["IP Address"] = ip_address
 
     elif system == "Darwin":  # macOS
         cpu_info = subprocess.getoutput("sysctl -n machdep.cpu.brand_string").strip()
         memory_info = subprocess.getoutput("sysctl -n hw.memsize").strip()
         disk_info = subprocess.getoutput("df -h / | awk 'NR==2 {print $2}'").strip()
+        ip_address = subprocess.getoutput("ipconfig getifaddr en0").strip()
         
         hardware_info["CPU"] = {"Name": cpu_info, "Summary": "N/A"}
         hardware_info["Memory"] = f"{int(memory_info) / (1024**3):.2f} GB"
         hardware_info["Disk"] = disk_info
+        hardware_info["IP Address"] = ip_address
     
     return hardware_info
 
